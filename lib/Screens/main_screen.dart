@@ -16,6 +16,7 @@ import '../Widgets/categorie_widget.dart';
 import '../Screens/user_account.dart';
 import './category_screen.dart';
 import '../Widgets/acknowledgement.dart';
+import '../Widgets/faq.dart';
 import '../Widgets/home.dart';
 import '../data.dart';
 
@@ -186,6 +187,8 @@ class _MainScreenState extends State<MainScreen>
                   sliver: Testimonial()),
               SliverList(
                   delegate: SliverChildListDelegate([
+                SizedBox(height: 100),
+                FAQ(),
                 SizedBox(height: 100),
                 Acknowledgement(),
                 SizedBox(height: 10),
