@@ -1,5 +1,5 @@
 import 'package:flea_market/Screens/cart_screen.dart';
-
+import 'package:flutter/services.dart';
 import '../Widgets/testimonial.dart';
 
 import './add_screen.dart';
@@ -26,6 +26,22 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _handleKeyEvent(RawKeyEvent event) {
+    if (event.logicalKey == LogicalKeyboardKey.keyQ) {
+      print('Pressed the "Q" key!');
+      clearCartOnLogout();
+      context.read<FirebaseAuthService>().signOut();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final firebaseUser = FirebaseAuth.instance.currentUser;
@@ -37,140 +53,145 @@ class _MainScreenState extends State<MainScreen>
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              expandedHeight: height,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: RichText(
-                  text: TextSpan(
-                      text: "Rutuja ",
-                      style: GoogleFonts.cookie(
-                        fontSize: 25,
-                        color: Color.fromRGBO(219, 194, 164, 1),
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: " & ",
-                          style: GoogleFonts.cookie(
-                            fontSize: 15,
-                            color: Color.fromRGBO(219, 194, 164, 1),
-                          ),
+      body: RawKeyboardListener(
+        autofocus: true,
+        focusNode: _focusNode,
+        onKey: _handleKeyEvent,
+        child: Container(
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                pinned: true,
+                expandedHeight: height,
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: RichText(
+                    text: TextSpan(
+                        text: "Rutuja ",
+                        style: GoogleFonts.cookie(
+                          fontSize: 25,
+                          color: Color.fromRGBO(219, 194, 164, 1),
                         ),
-                        TextSpan(
-                          text: " Karan ",
-                          style: GoogleFonts.cookie(
-                            fontSize: 25,
-                            color: Color.fromRGBO(219, 194, 164, 1),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: " & ",
+                            style: GoogleFonts.cookie(
+                              fontSize: 15,
+                              color: Color.fromRGBO(219, 194, 164, 1),
+                            ),
                           ),
-                        ),
-                        TextSpan(
-                          text: " - ",
-                          style: GoogleFonts.cookie(
-                            fontSize: 25,
-                            color: Color.fromRGBO(219, 194, 164, 1),
+                          TextSpan(
+                            text: " Karan ",
+                            style: GoogleFonts.cookie(
+                              fontSize: 25,
+                              color: Color.fromRGBO(219, 194, 164, 1),
+                            ),
                           ),
-                        ),
-                        TextSpan(
-                          text: "Flea Market",
-                          style: GoogleFonts.cookie(
-                            fontSize: 30,
-                            color: Color.fromRGBO(234, 87, 83, 1),
+                          TextSpan(
+                            text: " - ",
+                            style: GoogleFonts.cookie(
+                              fontSize: 25,
+                              color: Color.fromRGBO(219, 194, 164, 1),
+                            ),
                           ),
-                        ),
-                      ]),
-                ),
-                background: Container(
-                  color: Colors.white,
-                  child: Image.asset(
-                    "assets/Images/AppBar-BG2.jpg",
-                    fit: BoxFit.fitWidth,
+                          TextSpan(
+                            text: "Flea Market",
+                            style: GoogleFonts.cookie(
+                              fontSize: 30,
+                              color: Color.fromRGBO(234, 87, 83, 1),
+                            ),
+                          ),
+                        ]),
                   ),
-                ),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    clearCartOnLogout();
-                    context.read<FirebaseAuthService>().signOut();
-                  },
-                  icon: Icon(
-                    Icons.logout,
+                  background: Container(
                     color: Colors.white,
-                  ),
-                )
-              ],
-              backgroundColor: Color.fromRGBO(31, 31, 38, 1),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                Home(),
-                //Dashboard(),
-                SizedBox(height: 100),
-
-                Center(
-                  child: Text("Shop by Category",
-                      style: GoogleFonts.muli(
-                        fontSize: 40,
-                        color: Color.fromRGBO(31, 31, 38, 0.8),
-                      )),
-                ),
-                SizedBox(height: 75),
-              ]),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 250),
-              sliver: CategorieWidget(),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                SizedBox(height: 50),
-                Column(
-                  children: [
-                    SizedBox(
-                      width: 250,
-                      height: 60,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) =>
-                                      CategorieScreen(null, "All Products")));
-                        },
-                        child: Text("View all products",
-                            style: GoogleFonts.muli(
-                                fontSize: 20,
-                                color: Color.fromRGBO(31, 31, 38, 0.7),
-                                fontWeight: FontWeight.w700)),
-                        style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                                color: Color.fromRGBO(234, 87, 83, 0.8),
-                                width: 2),
-                            primary: Color.fromRGBO(234, 87, 83, 1),
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0),
-                            )),
-                      ),
+                    child: Image.asset(
+                      "assets/Images/AppBar-BG2.jpg",
+                      fit: BoxFit.fitWidth,
                     ),
-                  ],
+                  ),
                 ),
-                SizedBox(height: 100),
-              ]),
-            ),
-            SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 200),
-                sliver: Testimonial()),
-            SliverList(
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      clearCartOnLogout();
+                      context.read<FirebaseAuthService>().signOut();
+                    },
+                    icon: Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+                backgroundColor: Color.fromRGBO(31, 31, 38, 1),
+              ),
+              SliverList(
                 delegate: SliverChildListDelegate([
-              SizedBox(height: 100),
-              Acknowledgement(),
-              SizedBox(height: 10),
-            ])),
-          ],
+                  Home(),
+                  //Dashboard(),
+                  SizedBox(height: 100),
+
+                  Center(
+                    child: Text("Shop by Category",
+                        style: GoogleFonts.muli(
+                          fontSize: 40,
+                          color: Color.fromRGBO(31, 31, 38, 0.8),
+                        )),
+                  ),
+                  SizedBox(height: 75),
+                ]),
+              ),
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 250),
+                sliver: CategorieWidget(),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  SizedBox(height: 50),
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: 250,
+                        height: 60,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (ctx) =>
+                                        CategorieScreen(null, "All Products")));
+                          },
+                          child: Text("View all products",
+                              style: GoogleFonts.muli(
+                                  fontSize: 20,
+                                  color: Color.fromRGBO(31, 31, 38, 0.7),
+                                  fontWeight: FontWeight.w700)),
+                          style: OutlinedButton.styleFrom(
+                              side: BorderSide(
+                                  color: Color.fromRGBO(234, 87, 83, 0.8),
+                                  width: 2),
+                              primary: Color.fromRGBO(234, 87, 83, 1),
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0),
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 100),
+                ]),
+              ),
+              SliverPadding(
+                  padding: EdgeInsets.symmetric(horizontal: 200),
+                  sliver: Testimonial()),
+              SliverList(
+                  delegate: SliverChildListDelegate([
+                SizedBox(height: 100),
+                Acknowledgement(),
+                SizedBox(height: 10),
+              ])),
+            ],
+          ),
         ),
       ),
       floatingActionButton: CircleFloatingButton.floatingActionButton(
