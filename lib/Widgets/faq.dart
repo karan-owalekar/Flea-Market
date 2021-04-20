@@ -30,16 +30,17 @@ class FAQ extends StatelessWidget {
           ),
         ),
         FAQQuestions(
-          question: "1st Question",
-          answer: "Answer to 1st question",
+          question: "How to add image to the product?",
+          answer:
+              "To add the image you need to provide URL of the required image. Make sure the URL ends with '.png' or '.jpg'. Use image whose resolution is atleast 640x480 px.",
         ),
         FAQQuestions(
-          question: "2st Question",
-          answer: "Answer to 2st question",
+          question: "How to logout?",
+          answer: "There are 3 ways to logout.\n1-> Press 'Q' when you are in home screen.\n2-> There is a logout button in the taskbar.\n3-> In the account setting, you will find logout button int the bottom.",
         ),
         FAQQuestions(
-          question: "3st Question",
-          answer: "Answer to 3st question",
+          question: "How to change user avatar?",
+          answer: "To change the user avatar, you need to first go to account section. Here near the avatar there will be settings button. Once you press that you will be prompted with available avatars. You can coose any avatar that suits your personality.",
         ),
         Padding(
           padding: const EdgeInsets.all(10),
